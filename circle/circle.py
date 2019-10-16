@@ -2,11 +2,18 @@
 
 import math
 
-class Circle:
+class Circle(object):
     pi = math.pi
 
     def __str__(self):
-        return str(self.area)
+        #return str(self.area)
+        this_string = 'Circle(' + str(self.radius) + ')'
+        return this_string
+
+    def __repr__(self):
+        #return repr(self.area)
+        this_string = 'Circle(' + str(self.radius) + ')'
+        return this_string
 
     def circle_area(self):
         self.area = self.pi * self.radius * self.radius

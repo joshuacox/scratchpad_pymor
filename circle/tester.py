@@ -11,3 +11,13 @@ e.printAll()
 
 print (str(e))
 print (Circle(2))
+
+if str(e) == str(Circle(2)):
+    print('equal')
+else:
+    print('not equal')
+
+if str(e) == Circle(2):
+    print('equal')
+else:
+    print('not equal')
