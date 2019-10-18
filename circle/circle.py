@@ -5,41 +5,38 @@ import math
 class Circle(object):
     pi = math.pi
 
-    def __str__(self):
-        #return str(self.area)
-        this_string = 'Circle(' + str(self.radius) + ')'
-        return this_string
-
     def __repr__(self):
-        #return repr(self.area)
-        this_string = 'Circle(' + str(self.radius) + ')'
-        return this_string
+        return f'Circle(self.radius)'
 
     def circle_area(self):
         self.area = self.pi * self.radius * self.radius
 
-    def __init__(self, radius="null", diameter="null"):
-        if radius == "null":
-          if diameter == "null":
-            self.radius = 1.0
-            self.diameter = 1.0
-          else:
-            self.diameter = diameter
-            self.radius = diameter / 2.0 
-        else:
-          self.radius = radius
-          self.diameter = 2.0 * self.radius
-        self.circle_area()
+    def __init__(self, radius=1):
+        self.radius = radius
 
-    def setDiameter(self, setdiameter):
-        self.diameter = setdiameter
-        self.radius = setdiameter / 2.0
-        self.circle_area()
+    @property
+    def area(self):
+        return math.pi * self.radius ** 2
 
-    def getArea(self):
-        return self.area
+    @property
+    def radius(self):
+        return self._radius
+
+    @radius.setter
+    def radius(self, radius):
+        if radius < 0:
+            raise ValueError("Radius cannot be negative")
+        self._radius = radius
+
+    @property
+    def diameter(self):
+        return self.radius * 2
+
+    @diameter.setter
+    def diameter(self, diameter):
+        self.radius = diameter / 2
 
     def printAll(self):
-        print( "Area of this circle is ", self.getArea() )
+        print( "Area of this circle is ", self.area )
         print( "Radius of this circle is ", self.radius )
         print( "Diameter of this circle is ", self.diameter )
