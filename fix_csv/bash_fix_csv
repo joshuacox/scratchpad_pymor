@@ -1,0 +1,84 @@
+#!/bin/bash
+
+# first let's display it
+# column -s'|' -t cars-original.csv
+
+# next abuse the cat
+# cat cars-original.csv | tr '|' ','
+
+# then leave the cat alone
+#tr '|' ',' < cars-original.csv
+
+fix_csv () {
+ local inFile=$1
+ local outFile=$2
+ local inQuote=$3
+ local inDelimeter=$4
+ if [[ -e $outFile ]];
+ then
+   echo "$outFile already exists! exiting..."
+   exit 1
+ fi
+ tr $inDelimeter ',' < $inFile > $outFile
+}
+
+# now lets do it with args
+parse_opts () {
+#  echo 'parse opts'
+
+  ORIGINAL_OPTS=$@
+  # Execute getopt on the arguments passed to this program, identified by the special character $@
+  short_opts="d:q:"
+  long_opts="in-delimeter:,in-quote:"
+  PARSED_OPTIONS=$(getopt --alternative -n "$0" -o "$short_opts" --long "$long_opts" -- "$@")
+
+  #Bad arguments, something has gone wrong with the getopt command.
+  if [[ $? -ne 0 ]];
+  then
+    horizontal_rule
+    echo  'bad argruments'
+  fi
+
+  # A little magic, necessary when using getopt.
+  eval set -- "$PARSED_OPTIONS"
+
+#  echo 'loop through opts'
+
+  opt_loop_count=1
+  while true; do
+    ((++opt_loop_count))
+    case "$1" in
+      -h|--help)
+        print_hep=true
+        shift;;
+      -d|--in-delimeter)
+        inDelimeter=$2
+#        echo "the inDelimeter = $inDelimeter"
+        shift 2 ;;
+      -q|--in-quote)
+        inQuote=$2
+#        echo "the inQuote = $inQuote"
+        shift 2 ;;
+      --)
+        shift
+        break;;
+    esac
+  done
+  if [ $# -ne 2 ]; then
+    # Print usage
+    echo -n 'Error! wrong number of arguments'
+    echo " [$#]"
+    echo 'usage:'
+    echo "$0 infile outfile"
+    echo -n "$0 "
+    echo -n '-in-delimeter="|"  --in-quote="'
+    echo "' cars-original.csv cars.csv"
+
+    exit 1
+  fi
+#  echo "first arg is $1"
+#  echo "second arg is $2"
+  fix_csv $1 $2 $inDelimeter $inQuote
+}
+
+parse_opts $@
